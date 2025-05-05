@@ -1,0 +1,55 @@
+# Phone Book Application in C++
+
+## Description
+
+This is a moderate-level **Phone Book Application** written in C++.  
+It allows users to **add**, **display**, **search**, **update**, **delete**, and **save contacts** using file handling.  
+The program uses object-oriented design with classes and vectors for efficient contact management.
+
+---
+
+## Features
+
+- Add new contact (name, phone, email)
+- Display all saved contacts
+- Search contacts by name or phone number
+- Update existing contact details
+- Delete a contact by name
+- Save contacts to a file (`contacts.txt`) for data persistence
+- Load contacts from file on program startup
+
+---
+
+## Project Structure
+
+- `Contact` class → stores individual contact details  
+- `PhoneBook` class → manages list of contacts and file operations
+
+---
+
+## Technologies Used
+
+- C++17 / C++20  
+- STL (`vector`, `algorithm`)  
+- File handling (`fstream`)
+
+---
+
+## How to Run
+
+1. Clone the repository:
+    ```bash
+    git clone https://github.com/yourusername/phone-book-application.git
+    ```
+2. Compile the code:
+    ```bash
+    g++ -o phonebook phonebook.cpp
+    ```
+3. Run the program:
+    ```bash
+    ./phonebook
+    ```
+
+---
+
+## Sample Menu
