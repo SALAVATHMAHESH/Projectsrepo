@@ -51,5 +51,172 @@ The program uses object-oriented design with classes and vectors for efficient c
     ```
 
 ---
-
+##UML CLASS DIAGRAM
 ## Sample Menu
++------------------+
+|     Contact      |
++------------------+
+| - name: string   |
+| - phone: string  |
+| - email: string  |
++------------------+
+| + input()        |
+| + display()      |
++------------------+
+
+          ▲
+          |
+          |
++----------------------+
+|      PhoneBook      |
++----------------------+
+| - contacts: vector  |
++----------------------+
+| + addContact()      |
+| + displayAll()      |
+| + searchContact()   |
+| + updateContact()   |
+| + deleteContact()   |
+| + loadFromFile()    |
+| + saveToFile()      |
++----------------------+
+
+
+
+
+#code in cpp:
+
+#include <iostream>
+#include <fstream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+class Contact {
+public:
+    string name;
+    string phone;
+    string email;
+
+    void input() {
+        cout << "Enter name: ";
+        cin >> name;
+        cout << "Enter phone: ";
+        cin >> phone;
+        cout << "Enter email: ";
+        cin >> email;
+    }
+
+    void display() const {
+        cout << "Name: " << name << ", Phone: " << phone << ", Email: " << email << endl;
+    }
+};
+
+class PhoneBook {
+    vector<Contact> contacts;
+
+    void loadFromFile() {
+        ifstream infile("contacts.txt");
+        Contact c;
+        while (infile >> c.name >> c.phone >> c.email) {
+            contacts.push_back(c);
+        }
+        infile.close();
+    }
+
+    void saveToFile() {
+        ofstream outfile("contacts.txt");
+        for (const auto& c : contacts) {
+            outfile << c.name << " " << c.phone << " " << c.email << endl;
+        }
+        outfile.close();
+    }
+
+public:
+    PhoneBook() { loadFromFile(); }
+
+    ~PhoneBook() { saveToFile(); }
+
+    void addContact() {
+        Contact c;
+        c.input();
+        contacts.push_back(c);
+        cout << "Contact added!\n";
+    }
+
+    void displayAll() {
+        if (contacts.empty()) {
+            cout << "No contacts to display.\n";
+            return;
+        }
+        for (const auto& c : contacts) {
+            c.display();
+        }
+    }
+
+    void searchContact() {
+        string keyword;
+        cout << "Enter name or phone to search: ";
+        cin >> keyword;
+        bool found = false;
+        for (const auto& c : contacts) {
+            if (c.name == keyword || c.phone == keyword) {
+                c.display();
+                found = true;
+            }
+        }
+        if (!found) cout << "Contact not found.\n";
+    }
+
+    void updateContact() {
+        string name;
+        cout << "Enter name of contact to update: ";
+        cin >> name;
+        for (auto& c : contacts) {
+            if (c.name == name) {
+                cout << "Enter new details:\n";
+                c.input();
+                cout << "Contact updated!\n";
+                return;
+            }
+        }
+        cout << "Contact not found.\n";
+    }
+
+    void deleteContact() {
+        string name;
+        cout << "Enter name of contact to delete: ";
+        cin >> name;
+        auto it = remove_if(contacts.begin(), contacts.end(), 
+                            [&](const Contact& c) { return c.name == name; });
+        if (it != contacts.end()) {
+            contacts.erase(it, contacts.end());
+            cout << "Contact deleted!\n";
+        } else {
+            cout << "Contact not found.\n";
+        }
+    }
+};
+
+int main() {
+    PhoneBook pb;
+    int choice;
+    do {
+        cout << "\n--- Phone Book Menu ---\n";
+        cout << "1. Add Contact\n2. Display All Contacts\n3. Search Contact\n4. Update Contact\n5. Delete Contact\n6. Exit\n";
+        cout << "Enter choice: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1: pb.addContact(); break;
+            case 2: pb.displayAll(); break;
+            case 3: pb.searchContact(); break;
+            case 4: pb.updateContact(); break;
+            case 5: pb.deleteContact(); break;
+            case 6: cout << "Exiting...\n"; break;
+            default: cout << "Invalid choice.\n";
+        }
+    } while (choice != 6);
+
+    return 0;
+}
